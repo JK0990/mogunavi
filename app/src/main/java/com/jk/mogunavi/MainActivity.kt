@@ -5,7 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.jk.mogunavi.ui.theme.MoguNaviTheme
-import com.jk.mogunavi.ui.screen.HomeScreen //  HomeScreen 불러오기
+import com.jk.mogunavi.navigation.MoguNaviApp
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -13,8 +14,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MoguNaviTheme {
-                HomeScreen() //  여기서 HomeScreen 호출
+                MoguNaviApp()
             }
         }
     }
 }
+
