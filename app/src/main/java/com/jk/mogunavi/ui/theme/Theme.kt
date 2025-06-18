@@ -4,7 +4,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
-private val MoguColorScheme = lightColorScheme()
+private val MoguColorScheme = lightColorScheme(
+    primary = Cream,
+    secondary = LightCream,
+    background = Cream,
+    surface = Cream,
+    onPrimary = Brown, // primary 색상 위의 글자색
+    onSecondary = Brown,
+    onBackground = Brown,
+    onSurface = Brown
+)
 
 @Composable
 fun MoguNaviTheme(content: @Composable () -> Unit) {

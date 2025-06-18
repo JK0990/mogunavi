@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.jk.mogunavi"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.jk.mogunavi"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
