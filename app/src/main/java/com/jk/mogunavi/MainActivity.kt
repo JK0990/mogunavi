@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
 import com.jk.mogunavi.ui.theme.MoguNaviTheme
 
 class MainActivity : ComponentActivity() {
@@ -34,8 +35,11 @@ fun MainScreen() {
                 contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Testing",
-            color = MaterialTheme.colorScheme.onPrimary
+            text = "モグナビ",
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.bodyLarge.copy(
+                fontSize = 32.sp
+            )
         )
     }
 }

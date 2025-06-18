@@ -1,3 +1,30 @@
-# Default ignored files
-/shelf/
-/workspace.xml
+# Gradle
+.gradle/
+build/
+
+# Local configuration
+local.properties
+
+# IDEs
+.idea/
+*.iml
+
+# OS File
+.DS_Store
+
+# Android Studio
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Log
+*.log
+
+# Kotlin
+*.kotlin_module
+
+# Jetpack Compose preview cache
+*.preview
+
+# VSCode
+.vscode/
