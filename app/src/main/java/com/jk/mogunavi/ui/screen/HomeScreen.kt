@@ -2,10 +2,8 @@ package com.jk.mogunavi.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
+
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -27,11 +25,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
     val shops by viewModel.shops.collectAsState()
 
-    val apiKey = "d0240fe16771e4bd" //
+    val apiKey = "d0240fe16771e4bd"
     val lat = 34.7055
     val lng = 135.4983
 
-    // 첫 렌더링 시 API 호출
+    // API 호출
     LaunchedEffect(true) {
         viewModel.fetchShops(apiKey, lat, lng)
     }
@@ -40,78 +38,79 @@ fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(horizontal = 16.dp, vertical = 12.dp)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 로고 및 타이틀
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.mogunavi_logo),
-                contentDescription = "로고",
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(RectangleShape)
-                    .border(0.dp, Color.Transparent),
-                contentScale = ContentScale.Fit
-            )
+        // 로고 + 제목
+        Image(
+            painter = painterResource(id = R.drawable.mogunavi_logo),
+            contentDescription = "로고",
+            modifier = Modifier
+                .size(120.dp)
+                .clip(RectangleShape)
+        )
 
-            Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = "モグナビ",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.headlineSmall.copy(fontSize = 28.sp)
-            )
+        Text(
+            text = "モグナビ",
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 26.sp)
+        )
 
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        Spacer(modifier = Modifier.height(24.dp))
 
-        // 검색 결과 리스트
+        // 섹션 타이틀
+        Text(
+            text = "本日のおすすめ", // 오늘의 추천
+            color = Color(0xFF6B4E2E), // 진한 브라운
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
+            modifier = Modifier.align(Alignment.Start)
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 가게를 랜덤으로 표시 (오늘의 추천)
         if (shops.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(shops) { shop ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                    ) {
-                        AsyncImage(
-                            model = shop.photo.mobile.l,
-                            contentDescription = shop.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(180.dp),
-                            contentScale = ContentScale.Crop
-                        )
+            val shop = shops.random()
 
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            text = shop.name,
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-            }
-        } else {
-            // 로딩 중 또는 결과 없음 안내
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 40.dp),
-                contentAlignment = Alignment.TopCenter
+                    .fillMaxWidth()
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(Color.White)
+                    .padding(bottom = 8.dp)
             ) {
+                AsyncImage(
+                    model = shop.photo.mobile.l,
+                    contentDescription = shop.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentScale = ContentScale.Crop
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
                 Text(
-                    text = "맛집 정보를 불러오는 중입니다...",
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    style = MaterialTheme.typography.bodyLarge
+                    text = shop.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+
+                Text(
+                    text = shop.open ?: "영업시간 정보 없음",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.DarkGray,
+                    modifier = Modifier.padding(horizontal = 8.dp)
                 )
             }
+        } else {
+            Text(
+                text = "추천 가게를 불러오는 중...",
+                color = MaterialTheme.colorScheme.onPrimary
+            )
         }
     }
 }

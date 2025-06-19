@@ -14,7 +14,8 @@ data class Shop(
     val address: String,
     val lat: Double,
     val lng: Double,
-    val photo: Photo
+    val photo: Photo,
+    val open: String?
 )
 
 data class Photo(
