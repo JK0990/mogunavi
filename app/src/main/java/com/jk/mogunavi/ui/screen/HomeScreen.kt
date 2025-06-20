@@ -2,7 +2,6 @@ package com.jk.mogunavi.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -20,10 +19,15 @@ import coil.compose.AsyncImage
 import com.jk.mogunavi.R
 import com.jk.mogunavi.viewmodel.GourmetViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.pager.*
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
     val shops by viewModel.shops.collectAsState()
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
 
     val apiKey = "d0240fe16771e4bd"
     val lat = 34.7055
@@ -62,50 +66,61 @@ fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
 
         // 섹션 타이틀
         Text(
-            text = "本日のおすすめ", // 오늘의 추천
-            color = Color(0xFF6B4E2E), // 진한 브라운
+            text = "本日のおすすめ",
+            color = Color(0xFF6B4E2E),
             style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
             modifier = Modifier.align(Alignment.Start)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 가게를 랜덤으로 표시 (오늘의 추천)
         if (shops.isNotEmpty()) {
-            val shop = shops.random()
+            val visibleShops = shops.shuffled().take(5)
 
-            Column(
+            HorizontalPager(
+                count = visibleShops.size,
+                state = pagerState,
+                contentPadding = PaddingValues(horizontal = 32.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clip(MaterialTheme.shapes.medium)
-                    .background(Color.White)
-                    .padding(bottom = 8.dp)
-            ) {
-                AsyncImage(
-                    model = shop.photo.mobile.l,
-                    contentDescription = shop.name,
+                    .height(280.dp)
+            ) { page ->
+                val shop = visibleShops[page]
+
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
-                    contentScale = ContentScale.Crop
-                )
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(Color.White)
+                        .padding(8.dp)
+                ) {
+                    AsyncImage(
+                        model = shop.photo.mobile.l,
+                        contentDescription = shop.name,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(160.dp),
+                        contentScale = ContentScale.Crop
+                    )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                Text(
-                    text = shop.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
+                    Text(
+                        text = shop.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Black
+                    )
 
-                Text(
-                    text = shop.open ?: "영업시간 정보 없음",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.DarkGray,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
+                    Text(
+                        text = shop.open ?: "영업시간 정보 없음",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.DarkGray
+                    )
+                }
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
         } else {
             Text(
                 text = "추천 가게를 불러오는 중...",

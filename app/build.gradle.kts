@@ -28,11 +28,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
@@ -50,6 +50,10 @@ dependencies {
     //네비게이션 바
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.compose.material3:material3:1.2.1")
+
+    implementation("com.google.accompanist:accompanist-pager:0.34.0")
+    implementation("com.google.accompanist:accompanist-pager-indicators:0.34.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
