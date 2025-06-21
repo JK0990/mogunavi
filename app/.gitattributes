@@ -1,0 +1,4 @@
+build/** linguist-vendored
+.gradle/** linguist-vendored
+.idea/** linguist-vendored
+*.html linguist-generated

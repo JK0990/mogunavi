@@ -120,12 +120,22 @@ fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
             }
 
             Spacer(modifier = Modifier.height(12.dp))
-
         } else {
             Text(
                 text = "추천 가게를 불러오는 중...",
                 color = MaterialTheme.colorScheme.onPrimary
             )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(Color.Gray)
+        ) {
+            MapPermissionWrapper()
         }
     }
 }
