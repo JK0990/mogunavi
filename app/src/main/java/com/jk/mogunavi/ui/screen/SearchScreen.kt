@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.jk.mogunavi.viewmodel.GourmetViewModel
+import com.jk.mogunavi.ui.components.ShopItemCard
+import com.jk.mogunavi.ui.components.ShopDetailModal
+import com.jk.mogunavi.data.remote.model.Shop
 import kotlin.math.*
 
 @Composable
@@ -36,9 +39,10 @@ fun SearchScreen() {
 
     val shopList by viewModel.shops.collectAsState()
 
-    // 예시 위치 (우메다)
-    val myLat = 34.668698
-    val myLng = 135.501869
+    val myLat = 34.4502
+    val myLng = 135.5651
+
+    val selectedShop = remember { mutableStateOf<Shop?>(null) } // ✅ 상태 추가
 
     val filteredShopList = remember(shopList, selectedDistance) {
         shopList.filter { shop ->
@@ -47,10 +51,22 @@ fun SearchScreen() {
             if (lat != null && lng != null) {
                 val distance = calculateDistance(myLat, myLng, lat, lng)
                 distance in ((minMap[selectedDistance] ?: 0).toDouble()..(maxMap[selectedDistance] ?: 1000).toDouble())
-            } else {
-                false
-            }
+            } else false
         }
+    }
+
+    fun fetchAllPages() {
+        viewModel.fetchShops(
+            apiKey = "d0240fe16771e4bd",
+            lat = myLat,
+            lng = myLng,
+            range = rangeMap[selectedDistance] ?: 3,
+            keyword = query
+        )
+    }
+
+    LaunchedEffect(Unit) {
+        fetchAllPages()
     }
 
     Column(
@@ -66,13 +82,7 @@ fun SearchScreen() {
             value = query,
             onValueChange = {
                 query = it
-                viewModel.fetchShops(
-                    apiKey = "d0240fe16771e4bd",
-                    lat = myLat,
-                    lng = myLng,
-                    range = rangeMap[selectedDistance] ?: 3,
-                    keyword = query
-                )
+                fetchAllPages()
             },
             placeholder = { Text("検索") },
             leadingIcon = {
@@ -116,13 +126,7 @@ fun SearchScreen() {
                 OutlinedButton(
                     onClick = {
                         selectedDistance = label
-                        viewModel.fetchShops(
-                            apiKey = "d0240fe16771e4bd",
-                            lat = myLat,
-                            lng = myLng,
-                            range = rangeMap[label] ?: 3,
-                            keyword = query
-                        )
+                        fetchAllPages()
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -157,51 +161,26 @@ fun SearchScreen() {
             items(filteredShopList) { shop ->
                 val distance = calculateDistance(myLat, myLng, shop.lat, shop.lng)
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        AsyncImage(
-                            model = shop.photo?.mobile?.l,
-                            contentDescription = "${shop.name} 사진",
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(180.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = shop.name,
-                            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
-                            color = Color.Black
-                        )
-
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "현재 위치로부터 약 ${distance.toInt()}m",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = Color.Gray
-                        )
-                    }
-                }
+                ShopItemCard( // ✅ 카드 클릭 시 상태 변경
+                    shop = shop,
+                    onClick = { selectedShop.value = shop }
+                )
             }
         }
     }
+
+    // ✅ 모달 표시 조건
+    if (selectedShop.value != null) {
+        ShopDetailModal(
+            shop = selectedShop.value!!,
+            onDismiss = { selectedShop.value = null }
+        )
+    }
 }
 
-fun calculateDistance(lat1: Double, lng1: Double, lat2: Double, lng2: Double): Double {
-    val R = 6371000.0
+fun calculateDistance(lat1: Double, lng1: Double, lat2: Double?, lng2: Double?): Double {
+    if (lat2 == null || lng2 == null) return Double.MAX_VALUE
+    val R = 6371000.0 // Earth radius in meters
     val dLat = Math.toRadians(lat2 - lat1)
     val dLng = Math.toRadians(lng2 - lng1)
     val a = sin(dLat / 2).pow(2.0) +

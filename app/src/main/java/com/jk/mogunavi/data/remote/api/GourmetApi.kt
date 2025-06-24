@@ -13,6 +13,7 @@ interface GourmetApi {
         @Query("range") range: Int = 3,
         @Query("keyword") keyword: String = "",
         @Query("format") format: String = "json",
-        @Query("count") count: Int = 50
+        @Query("count") count: Int = 100,
+        @Query("start") start: Int = 1
     ): GourmetResponse
 }

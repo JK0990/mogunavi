@@ -24,12 +24,28 @@ class GourmetViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             try {
-                val response = repository.searchShops(apiKey, lat, lng, range, keyword)
+                val allShops = mutableListOf<Shop>()
 
-                // 🔍 로그 출력: range 값과 받아온 shop 수
-                Log.d("GourmetViewModel", "range=$range, keyword=$keyword, shops=${response.results.shop.size}")
+                val startValues = listOf(1, 101, 201)
+                for (start in startValues) {
+                    val response = repository.searchShops(
+                        apiKey = apiKey,
+                        lat = lat,
+                        lng = lng,
+                        range = range,
+                        keyword = keyword,
+                        start = start
+                    )
+                    val fetched = response.results.shop
+                    Log.d("GourmetViewModel", "start=$start, fetched=${fetched.size}")
+                    allShops.addAll(fetched)
 
-                _shops.value = response.results.shop
+                    // 만약 100개 미만이면 다음 start는 생략 (끝까지 도달한 것)
+                    if (fetched.size < 100) break
+                }
+
+                Log.d("GourmetViewModel", "총 받아온 shop 수: ${allShops.size}")
+                _shops.value = allShops
             } catch (e: Exception) {
                 e.printStackTrace()
                 Log.e("GourmetViewModel", "API 호출 중 오류 발생: ${e.message}")

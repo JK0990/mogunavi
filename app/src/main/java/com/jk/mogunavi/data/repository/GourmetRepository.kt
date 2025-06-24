@@ -1,17 +1,24 @@
 package com.jk.mogunavi.data.repository
 
-import com.jk.mogunavi.data.remote.api.RetrofitInstance
+import com.jk.mogunavi.data.remote.api.RetrofitInstance.api
 import com.jk.mogunavi.data.remote.model.GourmetResponse
 
 class GourmetRepository {
     suspend fun searchShops(
-        key: String,
+        apiKey: String,
         lat: Double,
         lng: Double,
-        range: Int = 3,
-        keyword: String = "",
-        format: String = "json"
+        range: Int,
+        keyword: String,
+        start: Int = 1 // ✅ 마지막 파라미터
     ): GourmetResponse {
-        return RetrofitInstance.api.searchShops(key, lat, lng, range, keyword, format)
+        return api.searchShops(
+            key = apiKey,
+            lat = lat,
+            lng = lng,
+            range = range,
+            keyword = keyword,
+            start = start
+        )
     }
 }
