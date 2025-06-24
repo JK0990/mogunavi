@@ -11,6 +11,8 @@ interface GourmetApi {
         @Query("lat") lat: Double,
         @Query("lng") lng: Double,
         @Query("range") range: Int = 3,
-        @Query("format") format: String = "json"
+        @Query("keyword") keyword: String = "",
+        @Query("format") format: String = "json",
+        @Query("count") count: Int = 50
     ): GourmetResponse
 }

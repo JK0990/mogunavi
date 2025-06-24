@@ -9,8 +9,9 @@ class GourmetRepository {
         lat: Double,
         lng: Double,
         range: Int = 3,
+        keyword: String = "",
         format: String = "json"
     ): GourmetResponse {
-        return RetrofitInstance.api.searchShops(key, lat, lng, range, format)
+        return RetrofitInstance.api.searchShops(key, lat, lng, range, keyword, format)
     }
 }
