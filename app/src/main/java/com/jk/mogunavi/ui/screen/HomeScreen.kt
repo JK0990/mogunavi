@@ -2,6 +2,7 @@ package com.jk.mogunavi.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,6 +38,8 @@ fun HomeScreen(
     val lat = 34.7055
     val lng = 135.4983
 
+    var showModal by remember { mutableStateOf(false) }
+
     LaunchedEffect(true) {
         viewModel.fetchShops(apiKey, lat, lng)
     }
@@ -48,33 +51,65 @@ fun HomeScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // 현재 위치 표시 (지도 아이콘 + 주소 텍스트)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { showModal = true } // ✅ 모달 열기 트리거
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_map),
+                contentDescription = "위치 아이콘",
+                modifier = Modifier.size(20.dp)
+            )
+            Spacer(modifier = Modifier.width(6.dp))
+            Text(
+                text = "성안청구타운",
+                color = Color(0xFFA47148),
+                fontSize = 14.sp
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 🔍 SearchBar
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .background(Color.White, shape = RectangleShape)
+                .padding(horizontal = 12.dp),
+            contentAlignment = Alignment.CenterStart
+        ) {
+            Text(text = "가게 검색", color = Color.Gray, fontSize = 14.sp)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // 🐻 마스코트 이미지
         Image(
             painter = painterResource(id = R.drawable.mogunavi_logo),
-            contentDescription = "로고",
+            contentDescription = "마스코트",
             modifier = Modifier
-                .size(120.dp)
-                .clip(RectangleShape)
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = "モグナビ",
-            color = MaterialTheme.colorScheme.onPrimary,
-            style = MaterialTheme.typography.headlineSmall.copy(fontSize = 26.sp)
+                .fillMaxWidth()
+                .height(160.dp),
+            contentScale = ContentScale.Fit
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        // 추천 섹션 제목
         Text(
             text = "本日のおすすめ",
-            color = Color(0xFF6B4E2E),
+            color = Color(0xFFA47148),
             style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
             modifier = Modifier.align(Alignment.Start)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
+        // 추천 가게 스와이프
         if (shops.isNotEmpty()) {
             val visibleShops = shops.shuffled().take(5)
 
@@ -127,16 +162,12 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
+    }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(300.dp)
-                .background(Color.Gray)
-        ) {
-            MapPermissionWrapper()
-        }
+    // ✅ 위치 설정 모달
+    if (showModal) {
+        LocationModal(
+            onDismiss = { showModal = false }
+        )
     }
 }

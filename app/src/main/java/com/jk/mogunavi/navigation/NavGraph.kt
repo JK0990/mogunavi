@@ -1,25 +1,47 @@
 package com.jk.mogunavi.navigation
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.jk.mogunavi.ui.screen.HomeScreen
-import com.jk.mogunavi.ui.screen.SplashScreen
-// 필요 시 다른 스크린 import
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.jk.mogunavi.ui.screen.*
 
 @Composable
-fun AppNavGraph(navController: NavHostController) {
-    NavHost(
-        navController = navController,
-        startDestination = "splash" // ✅ 처음 시작은 스플래쉬
-    ) {
-        composable("splash") {
-            SplashScreen(navController)
+fun NavGraph() {
+    val navController = rememberNavController()
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    Scaffold(
+        bottomBar = {
+            if (currentRoute != "splash") {
+                BottomNavigationBar(navController)
+            }
         }
-        composable("home") {
-            HomeScreen(navController)
+    ) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = "splash",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("splash") {
+                SplashScreen(navController)
+            }
+            composable("home") {
+                HomeScreen(navController)
+            }
+            composable("search") {
+                SearchScreen()
+            }
+            composable("detail") {
+                DetailScreen()
+            }
         }
-        // 필요한 화면 추가 가능
     }
 }
