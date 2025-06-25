@@ -15,16 +15,20 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.accompanist.pager.*
 import com.jk.mogunavi.R
 import com.jk.mogunavi.viewmodel.GourmetViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.google.accompanist.pager.*
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: GourmetViewModel = viewModel()
+) {
     val shops by viewModel.shops.collectAsState()
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
@@ -33,7 +37,6 @@ fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
     val lat = 34.7055
     val lng = 135.4983
 
-    // API 호출
     LaunchedEffect(true) {
         viewModel.fetchShops(apiKey, lat, lng)
     }
@@ -45,7 +48,6 @@ fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 로고 + 제목
         Image(
             painter = painterResource(id = R.drawable.mogunavi_logo),
             contentDescription = "로고",
@@ -64,7 +66,6 @@ fun HomeScreen(viewModel: GourmetViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 섹션 타이틀
         Text(
             text = "本日のおすすめ",
             color = Color(0xFF6B4E2E),

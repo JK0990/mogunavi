@@ -161,7 +161,7 @@ fun SearchScreen() {
             items(filteredShopList) { shop ->
                 val distance = calculateDistance(myLat, myLng, shop.lat, shop.lng)
 
-                ShopItemCard( // ✅ 카드 클릭 시 상태 변경
+                ShopItemCard(
                     shop = shop,
                     onClick = { selectedShop.value = shop }
                 )
@@ -169,7 +169,6 @@ fun SearchScreen() {
         }
     }
 
-    // ✅ 모달 표시 조건
     if (selectedShop.value != null) {
         ShopDetailModal(
             shop = selectedShop.value!!,
