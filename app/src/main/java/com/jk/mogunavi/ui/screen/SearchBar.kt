@@ -8,8 +8,9 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -22,24 +23,20 @@ fun SearchBar(
     TextField(
         value = query,
         onValueChange = onQueryChanged,
+        placeholder = {
+            Text("検索")
+        },
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "검색",
+                contentDescription = "검색 아이콘",
                 tint = Color(0xFFA47148)
-            )
-        },
-        placeholder = {
-            Text(
-                text = "검색어를 입력하세요",
-                color = Color(0xFFBFA774),
-                fontSize = 14.sp
             )
         },
         shape = RoundedCornerShape(50),
         colors = TextFieldDefaults.colors(
-            focusedContainerColor = Color(0xFFFFF8E6),
             unfocusedContainerColor = Color(0xFFFFF8E6),
+            focusedContainerColor = Color(0xFFFFF8E6),
             disabledContainerColor = Color(0xFFFFF8E6),
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
@@ -47,12 +44,16 @@ fun SearchBar(
         ),
         modifier = modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(56.dp)
             .border(
                 width = 2.dp,
                 color = Color(0xFFA47148),
                 shape = RoundedCornerShape(50)
-            )
-            .shadow(4.dp, RoundedCornerShape(50))
+            ),
+        singleLine = true,
+        textStyle = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold
+        )
     )
 }

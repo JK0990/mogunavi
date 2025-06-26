@@ -9,6 +9,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
@@ -39,17 +40,20 @@ fun SplashScreen(navController: NavController) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // 로고 이미지 + 그림자
             Image(
                 painter = painterResource(id = R.drawable.mogunavi_logo),
                 contentDescription = "앱 로고",
                 modifier = Modifier
                     .size(200.dp)
+                    .shadow(10.dp, shape = RectangleShape) // 그림자 적용
                     .clip(RectangleShape),
                 contentScale = ContentScale.Fit
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 텍스트 (그림자 없음, 깔끔하게 유지)
             Text(
                 text = "モグナビ",
                 fontSize = 36.sp,

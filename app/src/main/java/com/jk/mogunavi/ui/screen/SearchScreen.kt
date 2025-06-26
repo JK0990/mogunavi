@@ -73,48 +73,19 @@ fun SearchScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary)
-            .padding(horizontal = 24.dp, vertical = 32.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(38.dp))
 
-        TextField(
-            value = query,
-            onValueChange = {
+        SearchBar(
+            query = query,
+            onQueryChanged = {
                 query = it
                 fetchAllPages()
-            },
-            placeholder = { Text("検索") },
-            leadingIcon = {
-                Icon(
-                    imageVector = Icons.Default.Search,
-                    contentDescription = "검색 아이콘",
-                    tint = Color(0xFFA47148)
-                )
-            },
-            shape = RoundedCornerShape(50),
-            colors = TextFieldDefaults.colors(
-                unfocusedContainerColor = Color(0xFFFFF8E6),
-                focusedContainerColor = Color(0xFFFFF8E6),
-                disabledContainerColor = Color(0xFFFFF8E6),
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color(0xFFA47148),
-                    shape = RoundedCornerShape(50)
-                ),
-            singleLine = true,
-            textStyle = TextStyle(
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
+            }
         )
+
 
         Spacer(modifier = Modifier.height(24.dp))
 

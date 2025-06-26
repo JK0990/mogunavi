@@ -12,8 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -31,6 +35,7 @@ fun HomeScreen(
     viewModel: GourmetViewModel = viewModel()
 ) {
     val shops by viewModel.shops.collectAsState()
+    val currentAddress by viewModel.currentAddress.collectAsState()
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
@@ -39,9 +44,13 @@ fun HomeScreen(
     val lng = 135.4983
 
     var showModal by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
         viewModel.fetchShops(apiKey, lat, lng)
+        viewModel.fetchCurrentAddressFromLatLng(context, lat, lng)
     }
 
     Column(
@@ -51,12 +60,11 @@ fun HomeScreen(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // 현재 위치 표시 (지도 아이콘 + 주소 텍스트)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { showModal = true } // ✅ 모달 열기 트리거
+                .clickable { showModal = true }
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_map),
@@ -65,7 +73,7 @@ fun HomeScreen(
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = "성안청구타운",
+                text = currentAddress ?: "위치를 불러오는 중...",
                 color = Color(0xFFA47148),
                 fontSize = 14.sp
             )
@@ -73,21 +81,13 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 🔍 SearchBar
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .background(Color.White, shape = RectangleShape)
-                .padding(horizontal = 12.dp),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Text(text = "가게 검색", color = Color.Gray, fontSize = 14.sp)
-        }
+        SearchBar(
+            query = searchQuery,
+            onQueryChanged = { searchQuery = it }
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // 🐻 마스코트 이미지
         Image(
             painter = painterResource(id = R.drawable.mogunavi_logo),
             contentDescription = "마스코트",
@@ -99,7 +99,6 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // 추천 섹션 제목
         Text(
             text = "本日のおすすめ",
             color = Color(0xFFA47148),
@@ -109,7 +108,6 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 추천 가게 스와이프
         if (shops.isNotEmpty()) {
             val visibleShops = shops.shuffled().take(5)
 
@@ -119,39 +117,47 @@ fun HomeScreen(
                 contentPadding = PaddingValues(horizontal = 32.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(280.dp)
+                    .height(240.dp)
             ) { page ->
                 val shop = visibleShops[page]
 
-                Column(
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(MaterialTheme.shapes.medium)
-                        .background(Color.White)
-                        .padding(8.dp)
                 ) {
                     AsyncImage(
                         model = shop.photo.mobile.l,
                         contentDescription = shop.name,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(160.dp),
+                            .height(240.dp),
                         contentScale = ContentScale.Crop
                     )
 
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = shop.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black
-                    )
-
-                    Text(
-                        text = shop.open ?: "영업시간 정보 없음",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color.DarkGray
-                    )
+                    Column(
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(12.dp)
+                    ) {
+                        Text(
+                            text = shop.name,
+                            style = TextStyle(
+                                color = Color.White,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                shadow = Shadow(color = Color.Black, blurRadius = 4f)
+                            )
+                        )
+                        Text(
+                            text = shop.open ?: "영업시간 정보 없음",
+                            style = TextStyle(
+                                color = Color.White,
+                                fontSize = 12.sp,
+                                shadow = Shadow(color = Color.Black, blurRadius = 4f)
+                            )
+                        )
+                    }
                 }
             }
 
@@ -164,7 +170,6 @@ fun HomeScreen(
         }
     }
 
-    // ✅ 위치 설정 모달
     if (showModal) {
         LocationModal(
             onDismiss = { showModal = false }
