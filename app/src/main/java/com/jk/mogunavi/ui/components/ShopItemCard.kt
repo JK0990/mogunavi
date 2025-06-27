@@ -17,13 +17,13 @@ import com.jk.mogunavi.data.remote.model.Shop
 @Composable
 fun ShopItemCard(
     shop: Shop,
-    onClick: () -> Unit // ✅ 클릭 이벤트 파라미터 추가
+    onClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { onClick() }, // ✅ 클릭 시 이벤트 실행
+            .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -43,7 +43,10 @@ fun ShopItemCard(
             Column {
                 Text(text = shop.name, fontSize = 18.sp)
                 Text(text = shop.address, fontSize = 14.sp)
-                Text(text = "영업시간: ${shop.open ?: "정보 없음"}", fontSize = 12.sp)
+                Text(
+                    text = "오시는 길: ${shop.access}",
+                    fontSize = 12.sp
+                )
             }
         }
     }

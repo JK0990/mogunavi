@@ -12,12 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -114,49 +111,52 @@ fun HomeScreen(
             HorizontalPager(
                 count = visibleShops.size,
                 state = pagerState,
-                contentPadding = PaddingValues(horizontal = 32.dp),
+                contentPadding = PaddingValues(start = 8.dp, end = 16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(240.dp)
+                    .height(330.dp)
             ) { page ->
                 val shop = visibleShops[page]
 
-                Box(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(MaterialTheme.shapes.medium)
+                        .padding(horizontal = 4.dp)
+                        .width(300.dp)
                 ) {
-                    AsyncImage(
-                        model = shop.photo.mobile.l,
-                        contentDescription = shop.name,
+                    Box(
+                        modifier = Modifier
+                            .height(220.dp)
+                            .fillMaxWidth()
+                            .clip(MaterialTheme.shapes.medium)
+                    ) {
+                        AsyncImage(
+                            model = shop.photo.mobile.l,
+                            contentDescription = shop.name,
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(240.dp),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(12.dp)
+                            .height(110.dp)
+                            .background(Color.White)
+                            .padding(8.dp)
                     ) {
-                        Text(
-                            text = shop.name,
-                            style = TextStyle(
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                shadow = Shadow(color = Color.Black, blurRadius = 4f)
+                        Column {
+                            Text(
+                                text = shop.name,
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Black
                             )
-                        )
-                        Text(
-                            text = shop.open ?: "영업시간 정보 없음",
-                            style = TextStyle(
-                                color = Color.White,
-                                fontSize = 12.sp,
-                                shadow = Shadow(color = Color.Black, blurRadius = 4f)
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "오시는 길: ${shop.access ?: "정보 없음"}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Color.DarkGray
                             )
-                        )
+                        }
                     }
                 }
             }

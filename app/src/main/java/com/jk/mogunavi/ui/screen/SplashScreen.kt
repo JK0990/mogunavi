@@ -46,7 +46,7 @@ fun SplashScreen(navController: NavController) {
                 contentDescription = "앱 로고",
                 modifier = Modifier
                     .size(200.dp)
-                    .shadow(10.dp, shape = RectangleShape) // 그림자 적용
+                    .shadow(10.dp, shape = RectangleShape)
                     .clip(RectangleShape),
                 contentScale = ContentScale.Fit
             )

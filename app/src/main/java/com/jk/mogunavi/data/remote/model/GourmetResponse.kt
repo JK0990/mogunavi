@@ -11,6 +11,7 @@ data class Results(
 data class Shop(
     val id: String,
     val name: String,
+    val access: String?,
     val address: String,
     val lat: Double,
     val lng: Double,
