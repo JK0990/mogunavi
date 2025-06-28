@@ -19,6 +19,8 @@ import com.jk.mogunavi.viewmodel.GourmetViewModel
 import com.jk.mogunavi.ui.components.ShopItemCard
 import com.jk.mogunavi.ui.components.ShopDetailModal
 import com.jk.mogunavi.data.remote.model.Shop
+import androidx.compose.foundation.lazy.rememberLazyListState
+import kotlinx.coroutines.launch
 import kotlin.math.*
 
 @Composable
@@ -27,7 +29,9 @@ fun SearchScreen() {
     val context = LocalContext.current
 
     var query by remember { mutableStateOf("") }
-    var selectedDistance by remember { mutableStateOf("1km") }
+    var selectedDistance by remember { mutableStateOf("500m") }
+    val currentPage = remember { mutableStateOf(0) }
+    val itemsPerPage = 10
 
     val distanceOptions = listOf("500m", "1km", "2km", "3km")
     val rangeMap = mapOf("500m" to 2, "1km" to 3, "2km" to 4, "3km" to 5)
@@ -37,10 +41,14 @@ fun SearchScreen() {
     val myLat = 34.4502
     val myLng = 135.5651
 
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
     val shopList by viewModel.shops.collectAsState()
     val selectedShop = remember { mutableStateOf<Shop?>(null) }
 
     val filteredShopList = remember(shopList, selectedDistance) {
+        currentPage.value = 0 // 거리 선택 바뀔 때 페이지 초기화
         shopList.filter { shop ->
             val lat = shop.lat
             val lng = shop.lng
@@ -50,6 +58,10 @@ fun SearchScreen() {
             } else false
         }
     }
+
+    val totalPages = (filteredShopList.size + itemsPerPage - 1) / itemsPerPage
+    val pagedShopList = filteredShopList.drop(currentPage.value * itemsPerPage)
+        .take(itemsPerPage)
 
     fun fetchAllPages() {
         viewModel.fetchShops(
@@ -61,7 +73,6 @@ fun SearchScreen() {
         )
     }
 
-    // ✅ 현재 주소 관련 코드 제거 → fetchShops만 호출
     LaunchedEffect(Unit) {
         fetchAllPages()
     }
@@ -75,22 +86,23 @@ fun SearchScreen() {
     ) {
         Spacer(modifier = Modifier.height(20.dp))
 
-        // ✅ 주소 출력 제거
-
         SearchBar(
             query = query,
             onQueryChanged = {
                 query = it
                 fetchAllPages()
             },
-            onSearchConfirmed = { fetchAllPages() }
+            onSearchConfirmed = {
+                fetchAllPages()
+            }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             distanceOptions.forEach { label ->
                 OutlinedButton(
@@ -103,36 +115,73 @@ fun SearchScreen() {
                         containerColor = if (selectedDistance == label) Color(0xFFA47148) else Color.White,
                         contentColor = if (selectedDistance == label) Color.White else Color(0xFFA47148)
                     ),
-                    contentPadding = PaddingValues(vertical = 6.dp, horizontal = 0.dp),
+                    contentPadding = PaddingValues(vertical = 4.dp, horizontal = 0.dp),
                     modifier = Modifier
                         .weight(1f)
                         .padding(horizontal = 4.dp)
+                        .height(40.dp)
                 ) {
                     Text(
                         text = label,
-                        fontSize = if (label == "500m") 12.sp else 14.sp,
+                        fontSize = 14.sp,
                         fontWeight = FontWeight.Bold
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
-        Text(
-            text = "검색어: $query, 거리: $selectedDistance",
-            color = Color.Black,
-            style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(filteredShopList) { shop ->
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.weight(1f)
+        ) {
+            items(pagedShopList) { shop ->
                 ShopItemCard(
                     shop = shop,
                     onClick = { selectedShop.value = shop }
                 )
+            }
+        }
+
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // 🔸 페이지 네비게이션 및 표시
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(
+                onClick = {
+                    if (currentPage.value > 0) {
+                        currentPage.value--
+                        coroutineScope.launch {
+                            listState.scrollToItem(0)
+                        }
+                    }
+                },
+                enabled = currentPage.value > 0
+            ) {
+                Text("이전")
+            }
+
+
+            Text(text = "${currentPage.value + 1} / $totalPages")
+
+            Button(
+                onClick = {
+                    if ((currentPage.value + 1) * itemsPerPage < filteredShopList.size) {
+                        currentPage.value++
+                        coroutineScope.launch {
+                            listState.scrollToItem(0)
+                        }
+                    }
+                },
+                enabled = (currentPage.value + 1) * itemsPerPage < filteredShopList.size
+            ) {
+                Text("다음")
             }
         }
     }
@@ -156,3 +205,4 @@ fun calculateDistance(lat1: Double, lng1: Double, lat2: Double?, lng2: Double?):
     val c = 2 * atan2(sqrt(a), sqrt(1 - a))
     return R * c
 }
+
