@@ -103,12 +103,12 @@ fun HomeScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_map),
-                contentDescription = "위치 아이콘",
+                contentDescription = "位置アイコン",
                 modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
-                text = currentAddress ?: "위치를 불러오는 중...",
+                text = currentAddress ?: "位置情報を取得中…",
                 color = Color(0xFFA47148),
                 fontSize = 18.sp
             )
@@ -131,7 +131,7 @@ fun HomeScreen(
         ) {
             Image(
                 painter = painterResource(id = R.drawable.mogunavi_logo),
-                contentDescription = "마스코트",
+                contentDescription = "マスコット",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Fit
             )

@@ -24,5 +24,5 @@ data class Photo(
 )
 
 data class Mobile(
-    val l: String // 큰 이미지 URL
+    val l: String
 )

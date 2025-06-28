@@ -18,7 +18,7 @@ class GourmetViewModel : ViewModel() {
     private val _shops = MutableStateFlow<List<Shop>>(emptyList())
     val shops: StateFlow<List<Shop>> = _shops
 
-    private val _currentAddress = MutableStateFlow("위치 정보를 불러오는 중...")
+    private val _currentAddress = MutableStateFlow("位置情報を取得中…")
     val currentAddress: StateFlow<String> = _currentAddress
 
     fun fetchShops(
@@ -49,11 +49,11 @@ class GourmetViewModel : ViewModel() {
                     if (fetched.size < 100) break
                 }
 
-                Log.d("GourmetViewModel", "총 받아온 shop 수: ${allShops.size}")
+                Log.d("GourmetViewModel", "取得した店舗の総数: ${allShops.size}")
                 _shops.value = allShops
             } catch (e: Exception) {
                 e.printStackTrace()
-                Log.e("GourmetViewModel", "API 호출 중 오류 발생: ${e.message}")
+                Log.e("GourmetViewModel", "API 呼び出し中にエラーが発生しました: ${e.message}")
             }
         }
     }
@@ -73,11 +73,11 @@ class GourmetViewModel : ViewModel() {
                     address?.thoroughfare   // 丁目や通り
                 ).joinToString(" ")
 
-                Log.d("GourmetViewModel", "현재 주소: $name")
-                _currentAddress.value = name.ifBlank { "위치 정보를 불러올 수 없음" }
+                Log.d("GourmetViewModel", "現在の住所: $name")
+                _currentAddress.value = name.ifBlank { "位置情報を取得できません" }
             } catch (e: Exception) {
-                Log.e("GourmetViewModel", "주소 변환 실패: ${e.message}")
-                _currentAddress.value = "주소 정보를 불러올 수 없음"
+                Log.e("GourmetViewModel", "住所の変換に失敗しました: ${e.message}")
+                _currentAddress.value = "住所情報を取得できません"
             }
         }
     }
