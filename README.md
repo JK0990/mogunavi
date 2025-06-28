@@ -3,8 +3,9 @@
 
 ---
 
-**[仕様書概要]**  
-現在地をもとに、周辺の飲食店を直感的に検索・閲覧できるAndroidアプリです。
+**[仕様書]**  
+[Mogunavi Application Manual PDF ダウンロード.pdf](https://github.com/user-attachments/files/20964900/Mogunavi.Application.Manual.PDF.pdf)
+
 
 ---
 
@@ -13,7 +14,7 @@
 | 項目 | 内容 |
 | ---- | ---- |
 | アプリ名 | モグナビ（MoguNavi） |
-| 対応OS | Android 14 (API Level 34) / Minimum SDK: API Level 26 |
+| 対応OS | Android 15 (API Level 36) / Minimum SDK: API Level 26 |
 | 開発環境 | Android Studio Koala (2024.1.1) / Kotlin 2.0.21 |
 | 開発言語 | Kotlin |
 | 開発期間 | 2025.06.16 ～ 2025.06.29（14日間） |
@@ -46,33 +47,23 @@
 2. **ホーム画面**  
 　- Google Maps APIを使用して現在地取得  
 　- Hot Pepper APIから周辺店舗をランダムに5件表示（スワイプ対応）
+   
+![bandicam 2025-06-29 06-57-59-065](https://github.com/user-attachments/assets/42a6d9f1-68ff-4a70-b25e-abd630677fcb)
 
-3. **検索画面**  
+4. **検索画面**  
 　- 現在地からの検索半径設定機能  
 　- ジャンルやキーワードでの検索フィルター  
 　- 検索結果は1ページ最大10件（ページネーション機能付き）
+   
+![bandicam 2025-06-29 07-02-45-069](https://github.com/user-attachments/assets/48511157-6445-48d3-9761-f540db4f4910)
 
-4. **店舗詳細画面**  
+5. **店舗詳細画面**  
 　- 店舗の画像、名前、住所、営業時間を表示  
 　- Googleマップ上に店舗の位置を表示  
 　- 外部リンク共有機能あり
 
 ---
 
-## 🧭 使用方法（簡易）
-
-1. アプリ起動
-2. 現在地のアクセス許可を許可
-3. ホームでおすすめ店舗をスワイプで閲覧
-4. 下部ナビゲーションバーで「検索」や「詳細」へ遷移可能
-
----
-
-## 📸 スクリーンショット（例）
-
-※ 詳細はPDFまたは `screenshots/` ディレクトリをご確認ください。
-
----
 
 ## 🙇‍♂️ コメント
 
