@@ -44,11 +44,15 @@
 1. **スプラッシュ画面**  
 　アプリ起動時、ロゴを表示して自然な導線へ
 
-2. **ホーム画面**  
+![searchScreen](https://github.com/user-attachments/assets/88dca023-176e-4d7b-bfad-2204e22709b4)
+
+3. **ホーム画面**  
 　- Google Maps APIを使用して現在地取得  
 　- Hot Pepper APIから周辺店舗をランダムに5件表示（スワイプ対応）
    
-![bandicam 2025-06-29 06-57-59-065](https://github.com/user-attachments/assets/42a6d9f1-68ff-4a70-b25e-abd630677fcb)
+![bandicam 2025-06-29 07-02-45-069](https://github.com/user-attachments/assets/04106a9f-fd7d-42a9-928f-13e2783df74f) ![bandicam 2025-06-29 06-57-59-065](https://github.com/user-attachments/assets/415990a2-232a-4338-9186-c8cb9fd2f40b)
+
+
 
 4. **検索画面**  
 　- 現在地からの検索半径設定機能  
