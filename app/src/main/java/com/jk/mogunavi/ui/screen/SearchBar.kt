@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 fun SearchBar(
     query: String,
     onQueryChanged: (String) -> Unit,
+    onSearchConfirmed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     TextField(
@@ -42,6 +43,12 @@ fun SearchBar(
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
         ),
+        singleLine = true,
+        textStyle = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black // ✅ 글씨색 명시해서 가독성 확보
+        ),
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
@@ -49,11 +56,6 @@ fun SearchBar(
                 width = 2.dp,
                 color = Color(0xFFA47148),
                 shape = RoundedCornerShape(50)
-            ),
-        singleLine = true,
-        textStyle = TextStyle(
-            fontSize = 16.sp,
-            fontWeight = FontWeight.Bold
-        )
+            )
     )
 }

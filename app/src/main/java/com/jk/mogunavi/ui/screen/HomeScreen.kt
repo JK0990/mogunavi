@@ -10,11 +10,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -66,47 +71,61 @@ fun HomeScreen(
             Image(
                 painter = painterResource(id = R.drawable.ic_map),
                 contentDescription = "위치 아이콘",
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier.size(24.dp) // 20 → 24
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = currentAddress ?: "위치를 불러오는 중...",
                 color = Color(0xFFA47148),
-                fontSize = 14.sp
+                fontSize = 18.sp // 14 → 18
             )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
-
-        SearchBar(
-            query = searchQuery,
-            onQueryChanged = { searchQuery = it }
-        )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        Image(
-            painter = painterResource(id = R.drawable.mogunavi_logo),
-            contentDescription = "마스코트",
+        // ✅ 마스코트 이미지 크기 1.25배 (160 → 200), 그림자 높이도 증가
+        Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .height(160.dp),
-            contentScale = ContentScale.Fit
-        )
+                .size(200.dp) // 기존 160.dp → 200.dp
+                .shadow(
+                    elevation = 18.dp, // 기존 14.dp → 18.dp
+                    shape = RectangleShape,
+                    clip = false
+                )
+                .background(MaterialTheme.colorScheme.primary, shape = RectangleShape)
+                .clip(RectangleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.mogunavi_logo),
+                contentDescription = "마스코트",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Fit
+            )
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "本日のおすすめ",
-            color = Color(0xFFA47148),
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 18.sp),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily(
+                    Font(R.font.roundedmplus1c_bold, weight = FontWeight.Bold)
+                ),
+                color = Color(0xFFA47148)
+            ),
             modifier = Modifier.align(Alignment.Start)
         )
 
         Spacer(modifier = Modifier.height(12.dp))
 
         if (shops.isNotEmpty()) {
-            val visibleShops = shops.shuffled().take(5)
+            val visibleShops = remember(shops) {
+                shops.shuffled().take(5)
+            }
 
             HorizontalPager(
                 count = visibleShops.size,
@@ -147,14 +166,26 @@ fun HomeScreen(
                         Column {
                             Text(
                                 text = shop.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.Black
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily(
+                                    Font(R.font.roundedmplus1c_bold, weight = FontWeight.Bold)
+                                ),
+                                color = Color.Black,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = "오시는 길: ${shop.access ?: "정보 없음"}",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = Color.DarkGray
+                                text = shop.access ?: "정보 없음",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                fontFamily = FontFamily(
+                                    Font(R.font.roundedmplus1c_bold, weight = FontWeight.Normal)
+                                ),
+                                color = Color.DarkGray,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
                     }

@@ -1,25 +1,20 @@
 package com.jk.mogunavi.ui.screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
 import com.jk.mogunavi.viewmodel.GourmetViewModel
 import com.jk.mogunavi.ui.components.ShopItemCard
 import com.jk.mogunavi.ui.components.ShopDetailModal
@@ -29,20 +24,21 @@ import kotlin.math.*
 @Composable
 fun SearchScreen() {
     val viewModel: GourmetViewModel = viewModel()
+    val context = LocalContext.current
+
     var query by remember { mutableStateOf("") }
+    var selectedDistance by remember { mutableStateOf("1km") }
 
     val distanceOptions = listOf("500m", "1km", "2km", "3km")
     val rangeMap = mapOf("500m" to 2, "1km" to 3, "2km" to 4, "3km" to 5)
     val minMap = mapOf("500m" to 0, "1km" to 500, "2km" to 1000, "3km" to 2000)
     val maxMap = mapOf("500m" to 500, "1km" to 1000, "2km" to 2000, "3km" to 3000)
-    var selectedDistance by remember { mutableStateOf("1km") }
-
-    val shopList by viewModel.shops.collectAsState()
 
     val myLat = 34.4502
     val myLng = 135.5651
 
-    val selectedShop = remember { mutableStateOf<Shop?>(null) } // ✅ 상태 추가
+    val shopList by viewModel.shops.collectAsState()
+    val selectedShop = remember { mutableStateOf<Shop?>(null) }
 
     val filteredShopList = remember(shopList, selectedDistance) {
         shopList.filter { shop ->
@@ -65,6 +61,7 @@ fun SearchScreen() {
         )
     }
 
+    // ✅ 현재 주소 관련 코드 제거 → fetchShops만 호출
     LaunchedEffect(Unit) {
         fetchAllPages()
     }
@@ -76,16 +73,18 @@ fun SearchScreen() {
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(38.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // ✅ 주소 출력 제거
 
         SearchBar(
             query = query,
             onQueryChanged = {
                 query = it
                 fetchAllPages()
-            }
+            },
+            onSearchConfirmed = { fetchAllPages() }
         )
-
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -130,8 +129,6 @@ fun SearchScreen() {
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(filteredShopList) { shop ->
-                val distance = calculateDistance(myLat, myLng, shop.lat, shop.lng)
-
                 ShopItemCard(
                     shop = shop,
                     onClick = { selectedShop.value = shop }
@@ -150,7 +147,7 @@ fun SearchScreen() {
 
 fun calculateDistance(lat1: Double, lng1: Double, lat2: Double?, lng2: Double?): Double {
     if (lat2 == null || lng2 == null) return Double.MAX_VALUE
-    val R = 6371000.0 // Earth radius in meters
+    val R = 6371000.0
     val dLat = Math.toRadians(lat2 - lat1)
     val dLng = Math.toRadians(lng2 - lng1)
     val a = sin(dLat / 2).pow(2.0) +
