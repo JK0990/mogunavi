@@ -30,7 +30,7 @@ fun SearchBar(
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
-                contentDescription = "검색 아이콘",
+                contentDescription = "検索アイコン",
                 tint = Color(0xFFA47148)
             )
         },
@@ -47,7 +47,7 @@ fun SearchBar(
         textStyle = TextStyle(
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black // ✅ 글씨색 명시해서 가독성 확보
+            color = Color.Black
         ),
         modifier = modifier
             .fillMaxWidth()

@@ -23,7 +23,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(navController: NavController) {
-    // 2초 대기 후 홈으로 이동
+
     LaunchedEffect(Unit) {
         delay(2000L)
         navController.navigate("home") {
@@ -34,16 +34,16 @@ fun SplashScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFBEEC1)), // 크림색 배경
+            .background(Color(0xFFFBEEC1)),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // 로고 이미지 + 그림자
+
             Image(
                 painter = painterResource(id = R.drawable.mogunavi_logo),
-                contentDescription = "앱 로고",
+                contentDescription = "アプリのロゴ",
                 modifier = Modifier
                     .size(200.dp)
                     .shadow(10.dp, shape = RectangleShape)
@@ -53,7 +53,6 @@ fun SplashScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 텍스트 (그림자 없음, 깔끔하게 유지)
             Text(
                 text = "モグナビ",
                 fontSize = 36.sp,

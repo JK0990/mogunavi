@@ -23,16 +23,15 @@ fun LocationModal(onDismiss: () -> Unit) {
                 .padding(16.dp)
         ) {
             Column {
-                Text("현재 위치 확인", fontSize = 18.sp)
+                Text("現在地を確認", fontSize = 18.sp)
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // ✅ 여기에 지도 삽입!
                 MapPermissionWrapper()
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(onClick = onDismiss) {
-                    Text("닫기")
+                    Text("閉じる")
                 }
             }
         }

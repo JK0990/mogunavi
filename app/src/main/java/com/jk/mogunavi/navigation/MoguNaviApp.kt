@@ -15,7 +15,6 @@ import com.jk.mogunavi.ui.screen.*
 fun MoguNaviApp() {
     val navController = rememberNavController()
 
-    // 현재 라우트를 확인 (스플래시에선 BottomBar 숨김)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 

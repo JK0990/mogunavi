@@ -10,7 +10,7 @@ class GourmetRepository {
         lng: Double,
         range: Int,
         keyword: String,
-        start: Int = 1 // ✅ 마지막 파라미터
+        start: Int = 1
     ): GourmetResponse {
         return api.searchShops(
             key = apiKey,

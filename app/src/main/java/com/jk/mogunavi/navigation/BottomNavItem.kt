@@ -11,7 +11,7 @@ sealed class BottomNavItem(
     val label: String,
     val icon: ImageVector
 ) {
-    object Home : BottomNavItem("home", "홈", Icons.Filled.Home)
-    object Search : BottomNavItem("search", "검색", Icons.Filled.Search)
-    object Detail : BottomNavItem("detail", "상세", Icons.Filled.Info)
+    object Home : BottomNavItem("home", "ホーム", Icons.Filled.Home)
+    object Search : BottomNavItem("search", "検索", Icons.Filled.Search)
+    object Detail : BottomNavItem("detail", "詳細", Icons.Filled.Info)
 }

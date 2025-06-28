@@ -63,7 +63,6 @@ fun SearchScreen() {
         )
     }
 
-    // 위치 가져오기 (1회)
     LaunchedEffect(Unit) {
         val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
@@ -181,7 +180,7 @@ fun SearchScreen() {
                 },
                 enabled = currentPage.value > 0
             ) {
-                Text("이전")
+                Text("前へ")
             }
 
             Text(text = "${currentPage.value + 1} / $totalPages")
@@ -197,7 +196,7 @@ fun SearchScreen() {
                 },
                 enabled = (currentPage.value + 1) * itemsPerPage < filteredShopList.size
             ) {
-                Text("다음")
+                Text("次へ")
             }
         }
     }

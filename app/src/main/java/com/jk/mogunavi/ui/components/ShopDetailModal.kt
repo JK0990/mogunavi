@@ -26,20 +26,20 @@ fun ShopDetailModal(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xAA000000)) // 반투명 배경
+            .background(Color(0xAA000000))
             .padding(32.dp),
-        contentAlignment = Alignment.Center // ✅ 카드 자체는 중앙 정렬
+        contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
-                .background(Color(0xFFFFF8E6)) // 연한 크림색
+                .background(Color(0xFFFFF8E6))
                 .padding(20.dp)
         ) {
             AsyncImage(
                 model = shop.photo.mobile.l,
-                contentDescription = "가게 이미지",
+                contentDescription = "店舗の画像",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,7 +80,7 @@ fun ShopDetailModal(
                 onClick = onDismiss,
                 modifier = Modifier.align(Alignment.End)
             ) {
-                Text("閉じる") // 일본어로 '닫기'
+                Text("閉じる")
             }
         }
     }

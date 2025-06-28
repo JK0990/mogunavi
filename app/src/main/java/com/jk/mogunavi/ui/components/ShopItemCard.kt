@@ -48,7 +48,7 @@ fun ShopItemCard(
         ) {
             AsyncImage(
                 model = shop.photo.mobile.l,
-                contentDescription = "가게 이미지",
+                contentDescription = "店舗の画像",
                 modifier = Modifier
                     .size(width = 100.dp, height = 100.dp)
                     .clip(RoundedCornerShape(8.dp)),
@@ -78,7 +78,7 @@ fun ShopItemCard(
                 )
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
-                    text = shop.access ?: "정보 없음",
+                    text = shop.access ?: "情報なし",
                     fontSize = 12.sp,
                     color = Color.Gray,
                     fontWeight = FontWeight.Normal,

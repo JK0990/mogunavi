@@ -32,7 +32,7 @@ fun DetailScreen() {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.mogunavi_logo),
-                contentDescription = "로고",
+                contentDescription = "ロゴ",
                 modifier = Modifier
                     .size(256.dp)
                     .clip(RectangleShape)
@@ -43,11 +43,12 @@ fun DetailScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "DetailScren",
+                text = "Thank you!",
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontSize = 32.sp
                 )
+
             )
         }
     }
