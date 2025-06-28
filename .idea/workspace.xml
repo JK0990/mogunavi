@@ -33,7 +33,8 @@
   <component name="ChangeListManager">
     <list default="true" id="4889cef2-ee14-47f6-88c5-9189d0f56a5e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/components/ShopItemCard.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/components/ShopItemCard.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/components/ShopDetailModal.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/components/ShopDetailModal.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/screen/HomeScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/screen/HomeScreen.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/screen/SearchScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/jk/mogunavi/ui/screen/SearchScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -239,12 +240,12 @@
       <map>
         <entry key="com.jk.mogunavi">
           <value>
-            <CheckInfo lastCheckTimestamp="1750394228711" />
+            <CheckInfo lastCheckTimestamp="1751114537385" />
           </value>
         </entry>
         <entry key="com.jk.mogunavi.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1750394228705" />
+            <CheckInfo lastCheckTimestamp="1751114537393" />
           </value>
         </entry>
       </map>

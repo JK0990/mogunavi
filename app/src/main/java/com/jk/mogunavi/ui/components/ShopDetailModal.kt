@@ -10,9 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
+import com.jk.mogunavi.R
 import com.jk.mogunavi.data.remote.model.Shop
 
 @Composable
@@ -25,31 +28,59 @@ fun ShopDetailModal(
             .fillMaxSize()
             .background(Color(0xAA000000)) // 반투명 배경
             .padding(32.dp),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center // ✅ 카드 자체는 중앙 정렬
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(24.dp))
                 .background(Color(0xFFFFF8E6)) // 연한 크림색
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(20.dp)
         ) {
             AsyncImage(
-                model = shop.photo.mobile.l, // ✅ photo는 nullable이 아님
+                model = shop.photo.mobile.l,
                 contentDescription = "가게 이미지",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(200.dp)
+                    .fillMaxWidth()
+                    .height(180.dp)
                     .clip(RoundedCornerShape(16.dp))
             )
+
             Spacer(modifier = Modifier.height(16.dp))
-            Text(shop.name, fontSize = 20.sp, color = Color.Black)
-            Text(shop.address, fontSize = 16.sp, color = Color.DarkGray)
-            Text("영업시간: ${shop.open ?: "정보 없음"}", fontSize = 14.sp, color = Color.Gray)
+
+            Text(
+                text = "${shop.name}",
+                fontSize = 20.sp,
+                color = Color.Black,
+                fontFamily = FontFamily(Font(R.font.roundedmplus1c_bold))
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "住所: ${shop.address}",
+                fontSize = 16.sp,
+                color = Color.DarkGray,
+                fontFamily = FontFamily(Font(R.font.roundedmplus1c_bold))
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = "営業時間: ${shop.open ?: "情報なし"}",
+                fontSize = 14.sp,
+                color = Color.Gray,
+                fontFamily = FontFamily(Font(R.font.roundedmplus1c_bold))
+            )
+
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = onDismiss) {
-                Text("닫기")
+
+            Button(
+                onClick = onDismiss,
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("閉じる") // 일본어로 '닫기'
             }
         }
     }

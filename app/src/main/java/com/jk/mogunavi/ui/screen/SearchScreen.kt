@@ -1,9 +1,13 @@
 package com.jk.mogunavi.ui.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Looper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,12 +18,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.android.gms.location.*
 import com.jk.mogunavi.viewmodel.GourmetViewModel
 import com.jk.mogunavi.ui.components.ShopItemCard
 import com.jk.mogunavi.ui.components.ShopDetailModal
 import com.jk.mogunavi.data.remote.model.Shop
-import androidx.compose.foundation.lazy.rememberLazyListState
 import kotlinx.coroutines.launch
 import kotlin.math.*
 
@@ -38,17 +43,44 @@ fun SearchScreen() {
     val minMap = mapOf("500m" to 0, "1km" to 500, "2km" to 1000, "3km" to 2000)
     val maxMap = mapOf("500m" to 500, "1km" to 1000, "2km" to 2000, "3km" to 3000)
 
-    val myLat = 34.4502
-    val myLng = 135.5651
-
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
     val shopList by viewModel.shops.collectAsState()
     val selectedShop = remember { mutableStateOf<Shop?>(null) }
 
-    val filteredShopList = remember(shopList, selectedDistance) {
-        currentPage.value = 0 // 거리 선택 바뀔 때 페이지 초기화
+    var myLat by remember { mutableStateOf(0.0) }
+    var myLng by remember { mutableStateOf(0.0) }
+
+
+    fun fetchAllPages(lat: Double, lng: Double) {
+        viewModel.fetchShops(
+            apiKey = "d0240fe16771e4bd",
+            lat = lat,
+            lng = lng,
+            range = rangeMap[selectedDistance] ?: 3,
+            keyword = query
+        )
+    }
+
+    // 위치 가져오기 (1회)
+    LaunchedEffect(Unit) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        ) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                location?.let {
+                    myLat = it.latitude
+                    myLng = it.longitude
+                    fetchAllPages(myLat, myLng)
+                }
+            }
+        }
+    }
+
+    val filteredShopList = remember(shopList, selectedDistance, myLat, myLng) {
+        currentPage.value = 0
         shopList.filter { shop ->
             val lat = shop.lat
             val lng = shop.lng
@@ -63,19 +95,6 @@ fun SearchScreen() {
     val pagedShopList = filteredShopList.drop(currentPage.value * itemsPerPage)
         .take(itemsPerPage)
 
-    fun fetchAllPages() {
-        viewModel.fetchShops(
-            apiKey = "d0240fe16771e4bd",
-            lat = myLat,
-            lng = myLng,
-            range = rangeMap[selectedDistance] ?: 3,
-            keyword = query
-        )
-    }
-
-    LaunchedEffect(Unit) {
-        fetchAllPages()
-    }
 
     Column(
         modifier = Modifier
@@ -90,10 +109,10 @@ fun SearchScreen() {
             query = query,
             onQueryChanged = {
                 query = it
-                fetchAllPages()
+                fetchAllPages(myLat, myLng)
             },
             onSearchConfirmed = {
-                fetchAllPages()
+                fetchAllPages(myLat, myLng)
             }
         )
 
@@ -108,7 +127,7 @@ fun SearchScreen() {
                 OutlinedButton(
                     onClick = {
                         selectedDistance = label
-                        fetchAllPages()
+                        fetchAllPages(myLat, myLng)
                     },
                     shape = RoundedCornerShape(8.dp),
                     colors = ButtonDefaults.outlinedButtonColors(
@@ -144,10 +163,8 @@ fun SearchScreen() {
             }
         }
 
-
         Spacer(modifier = Modifier.height(12.dp))
 
-        // 🔸 페이지 네비게이션 및 표시
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -166,7 +183,6 @@ fun SearchScreen() {
             ) {
                 Text("이전")
             }
-
 
             Text(text = "${currentPage.value + 1} / $totalPages")
 
@@ -205,4 +221,3 @@ fun calculateDistance(lat1: Double, lng1: Double, lat2: Double?, lng2: Double?):
     val c = 2 * atan2(sqrt(a), sqrt(1 - a))
     return R * c
 }
-

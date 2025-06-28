@@ -1,5 +1,8 @@
 package com.jk.mogunavi.ui.screen
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -22,10 +25,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.*
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.maps.model.LatLng
 import com.jk.mogunavi.R
 import com.jk.mogunavi.viewmodel.GourmetViewModel
 import kotlinx.coroutines.launch
@@ -41,18 +50,42 @@ fun HomeScreen(
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
 
-    val apiKey = "d0240fe16771e4bd"
-    val lat = 34.7055
-    val lng = 135.4983
+    val context = LocalContext.current
+    val fusedLocationClient = remember {
+        LocationServices.getFusedLocationProviderClient(context)
+    }
 
     var showModal by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-
     var searchQuery by remember { mutableStateOf("") }
 
     LaunchedEffect(true) {
-        viewModel.fetchShops(apiKey, lat, lng)
-        viewModel.fetchCurrentAddressFromLatLng(context, lat, lng)
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val locationRequest = LocationRequest.create().apply {
+                priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                interval = 10000
+            }
+
+            val locationCallback = object : LocationCallback() {
+                override fun onLocationResult(result: LocationResult) {
+                    val location = result.lastLocation
+                    if (location != null) {
+                        viewModel.fetchShops("d0240fe16771e4bd", location.latitude, location.longitude)
+                        viewModel.fetchCurrentAddressFromLatLng(context, location.latitude, location.longitude)
+                        fusedLocationClient.removeLocationUpdates(this)
+                    }
+                }
+            }
+
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.getMainLooper()
+            )
+        }
     }
 
     Column(
@@ -71,25 +104,24 @@ fun HomeScreen(
             Image(
                 painter = painterResource(id = R.drawable.ic_map),
                 contentDescription = "위치 아이콘",
-                modifier = Modifier.size(24.dp) // 20 → 24
+                modifier = Modifier.size(24.dp)
             )
             Spacer(modifier = Modifier.width(6.dp))
             Text(
                 text = currentAddress ?: "위치를 불러오는 중...",
                 color = Color(0xFFA47148),
-                fontSize = 18.sp // 14 → 18
+                fontSize = 18.sp
             )
         }
 
         Spacer(modifier = Modifier.height(12.dp))
         Spacer(modifier = Modifier.height(16.dp))
 
-        // ✅ 마스코트 이미지 크기 1.25배 (160 → 200), 그림자 높이도 증가
         Box(
             modifier = Modifier
-                .size(200.dp) // 기존 160.dp → 200.dp
+                .size(200.dp)
                 .shadow(
-                    elevation = 18.dp, // 기존 14.dp → 18.dp
+                    elevation = 18.dp,
                     shape = RectangleShape,
                     clip = false
                 )
@@ -165,7 +197,7 @@ fun HomeScreen(
                     ) {
                         Column {
                             Text(
-                                text = shop.name,
+                                text = "店名: ${shop.name}",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 fontFamily = FontFamily(
@@ -177,7 +209,7 @@ fun HomeScreen(
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                text = shop.access ?: "정보 없음",
+                                text = "アクセス: ${shop.access ?: "情報なし"}",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Normal,
                                 fontFamily = FontFamily(
@@ -195,7 +227,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(12.dp))
         } else {
             Text(
-                text = "추천 가게를 불러오는 중...",
+                text = "おすすめ店舗を読み込み中...",
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
