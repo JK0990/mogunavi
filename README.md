@@ -52,7 +52,8 @@
 　- Hot Pepper APIから周辺店舗をランダムに5件表示（スワイプ対応）
    
 
-![home-Photoroom](https://github.com/user-attachments/assets/0ba4c639-280a-43d1-a53a-fcbb1f5e4864) ![bandicam 2025-06-29 06-57-59-065 (2)](https://github.com/user-attachments/assets/280bc126-c2fe-4341-b523-465f9c781e72)
+![home-Photoroom](https://github.com/user-attachments/assets/0ba4c639-280a-43d1-a53a-fcbb1f5e4864) ![bandicam 2025-06-29 06-57-59-065 (2)](https://github.com/user-attachments/assets/83e02296-327f-40d4-ab39-06f5cb118f73)
+
 
 
 
@@ -62,7 +63,8 @@
 　- ジャンルやキーワードでの検索フィルター  
 　- 検索結果は1ページ最大10件（ページネーション機能付き）
    
-![searchScreen-Photoroom](https://github.com/user-attachments/assets/a192650d-aa2a-40bb-a452-938ba870f145) ![Uploading bandicam 2025-06-29 07-02-45-069.gif…]()
+![searchScreen-Photoroom](https://github.com/user-attachments/assets/a192650d-aa2a-40bb-a452-938ba870f145) ![bandicam 2025-06-29 07-02-45-069](https://github.com/user-attachments/assets/4dba8616-2e70-435b-80c8-70ba52c47e2c)
+
 
 
 
