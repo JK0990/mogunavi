@@ -44,13 +44,16 @@
 1. **スプラッシュ画面**  
 　アプリ起動時、ロゴを表示して自然な導線へ
 
-![searchScreen](https://github.com/user-attachments/assets/88dca023-176e-4d7b-bfad-2204e22709b4)
+![Splash-Photoroom](https://github.com/user-attachments/assets/7c6692d8-5c95-48df-89ea-387227e37d76)
+
 
 3. **ホーム画面**  
 　- Google Maps APIを使用して現在地取得  
 　- Hot Pepper APIから周辺店舗をランダムに5件表示（スワイプ対応）
    
-![bandicam 2025-06-29 07-02-45-069](https://github.com/user-attachments/assets/04106a9f-fd7d-42a9-928f-13e2783df74f) ![bandicam 2025-06-29 06-57-59-065](https://github.com/user-attachments/assets/415990a2-232a-4338-9186-c8cb9fd2f40b)
+
+![home-Photoroom](https://github.com/user-attachments/assets/0ba4c639-280a-43d1-a53a-fcbb1f5e4864) ![bandicam 2025-06-29 06-57-59-065 (2)](https://github.com/user-attachments/assets/280bc126-c2fe-4341-b523-465f9c781e72)
+
 
 
 
@@ -59,12 +62,15 @@
 　- ジャンルやキーワードでの検索フィルター  
 　- 検索結果は1ページ最大10件（ページネーション機能付き）
    
-![bandicam 2025-06-29 07-02-45-069](https://github.com/user-attachments/assets/48511157-6445-48d3-9761-f540db4f4910)
+![searchScreen-Photoroom](https://github.com/user-attachments/assets/a192650d-aa2a-40bb-a452-938ba870f145) ![Uploading bandicam 2025-06-29 07-02-45-069.gif…]()
+
+
 
 5. **店舗詳細画面**  
 　- 店舗の画像、名前、住所、営業時間を表示  
 　- Googleマップ上に店舗の位置を表示  
 　- 外部リンク共有機能あり
+![DetailScreen-Photoroom](https://github.com/user-attachments/assets/c8e637dc-1833-454a-b52d-812b0aed0b36)
 
 ---
 
